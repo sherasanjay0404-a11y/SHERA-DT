@@ -1,0 +1,6 @@
+{
+  "name": "Magilir Kulu — SHE SHEIELD AI",
+  "description": "Automatic Network-Aware User Login System with Tamil and English Support for Magilir Kulu — SHE SHEIELD AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

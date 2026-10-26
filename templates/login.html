@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Magilir Kulu — RuralShield AI</title>
+  <meta name="description" content="Automatic Network-Aware User Login System for Magilir Kulu with Tamil and English Support.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <!-- Header with Top-Right Tamil | English Switcher -->
+  <header class="top-header">
+    <div class="header-container">
+      <div class="brand-lockup">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <strong id="hdr-app-name">Magilir Kulu</strong>
+          <span class="sub-brand">· RuralShield AI</span>
+        </div>
+      </div>
+
+      <!-- Mandatory Top-Right Language Switch -->
+      <div class="lang-switch-container">
+        <button type="button" id="btn-lang-ta" class="lang-btn" aria-label="Switch to Tamil">தமிழ்</button>
+        <span class="lang-divider">|</span>
+        <button type="button" id="btn-lang-en" class="lang-btn active" aria-label="Switch to English">English</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Network Status Bar -->
+  <div class="network-bar" id="network-bar">
+    <div class="network-container">
+      <div class="network-badge-group">
+        <span class="status-badge" id="network-badge">Strong Network</span>
+        <span class="network-meta" id="network-meta">RTT: 45ms · Passkey (FIDO2) Active</span>
+      </div>
+      <div class="network-sim-group">
+        <span class="sim-label" id="txt-sim-label">Simulate:</span>
+        <button type="button" class="sim-btn" data-mode="REAL">Auto</button>
+        <button type="button" class="sim-btn" data-mode="STRONG">Strong</button>
+        <button type="button" class="sim-btn" data-mode="WEAK">Weak</button>
+        <button type="button" class="sim-btn" data-mode="OFFLINE">Offline</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Viewport -->
+  <main class="main-layout">
+    <div class="layout-grid">
+      <!-- Left Branding -->
+      <section class="branding-section">
+        <h1 class="main-title" id="txt-tagline">Authentication That Works Even When the Network Doesn't.</h1>
+        <p class="main-desc" id="txt-purpose">
+          Provide secure and accessible login for Magilir Kulu users, especially those in rural areas with unstable internet connectivity.
+        </p>
+
+        <div class="benefits-list">
+          <div class="benefit-item">
+            <h3 id="txt-b1-title">Passkey Security</h3>
+            <p id="txt-b1-desc">FIDO2 hardware biometric assertions protect against phishing during good connectivity.</p>
+          </div>
+          <div class="benefit-item">
+            <h3 id="txt-b2-title">Network-Aware Authentication</h3>
+            <p id="txt-b2-desc">Automatically switches to lightweight RFC 6238 TOTP when network latency exceeds 500ms.</p>
+          </div>
+          <div class="benefit-item">
+            <h3 id="txt-b3-title">Offline-Ready Access</h3>
+            <p id="txt-b3-desc">Pre-provisioned device-bound PIN leases verify locally without cell service.</p>
+          </div>
+        </div>
+
+        <div class="policy-card">
+          <h4 id="txt-matrix-title">NAAA Decision Policy</h4>
+          <ul class="policy-rules">
+            <li id="rule-strong" class="active">STRONG NETWORK (≤500ms) → PASSKEY</li>
+            <li id="rule-weak">WEAK NETWORK (>500ms) → TOTP</li>
+            <li id="rule-offline">OFFLINE (Unreachable) → TRUSTED DEVICE PIN</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Right Login Card -->
+      <section class="login-section">
+        <div class="login-card">
+          <h2 class="card-title" id="txt-welcome">Welcome Back</h2>
+          <p class="card-subtitle" id="txt-subtitle">Verify your identity securely.</p>
+
+          <!-- Notification Banner -->
+          <div id="alert-box" class="alert-box hidden" role="alert"></div>
+
+          <!-- Recommendation Explainer -->
+          <div class="recommendation-callout" id="recom-callout">
+            <strong id="recom-title">Passkey (WebAuthn) Selected</strong>
+            <p id="recom-desc">A stable connection is available. Passkey authentication is recommended.</p>
+          </div>
+
+          <!-- Email Input -->
+          <div class="form-group">
+            <label for="input-email" id="lbl-email">Email Address</label>
+            <input type="email" id="input-email" value="sherasanjayn@gmail.com" required autocomplete="email webauthn">
+          </div>
+
+          <!-- AUTOMATICALLY SELECTED AUTHENTICATION INTERFACES -->
+          
+          <!-- Mode A: Strong Network -> Passkey -->
+          <div id="section-passkey" class="auth-mode-section">
+            <div class="mode-panel">
+              <h3 id="txt-passkey-hdr">Passkey Authentication</h3>
+              <p id="txt-passkey-prompt">Continue securely with your passkey.</p>
+              <button type="button" id="btn-passkey" class="btn-primary">Verify with Passkey</button>
+            </div>
+          </div>
+
+          <!-- Mode B: Weak Network -> TOTP -->
+          <div id="section-totp" class="auth-mode-section hidden">
+            <div class="mode-panel">
+              <h3 id="txt-totp-hdr">TOTP Authentication</h3>
+              <p id="txt-totp-prompt">Enter the code from your authenticator application.</p>
+              <div class="form-group">
+                <input type="text" id="input-totp" maxlength="6" inputmode="numeric" placeholder="123456" class="totp-input">
+              </div>
+              <button type="button" id="btn-totp" class="btn-primary">Submit Code</button>
+            </div>
+          </div>
+
+          <!-- Mode C: Offline -> Trusted Device PIN -->
+          <div id="section-offline" class="auth-mode-section hidden">
+            <div class="mode-panel">
+              <h3 id="txt-offline-hdr">Trusted Device PIN</h3>
+              <p id="txt-offline-prompt">Check this device for authorized offline access.</p>
+              <div id="offline-unprovisioned" class="hidden alert-box warning">
+                <span id="txt-offline-unprov">Offline access has not been configured on this device. Connect to the internet and complete the approved device-provisioning process first.</span>
+              </div>
+              <div id="offline-form" class="form-group">
+                <input type="password" id="input-pin" maxlength="8" inputmode="numeric" placeholder="••••" class="pin-input">
+                <button type="button" id="btn-pin" class="btn-primary" style="margin-top: 10px;">Unlock Trusted Device</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Password Fallback (Permitted for Admin) -->
+          <details class="pwd-details">
+            <summary id="txt-pwd-summary">Password (Administrator Fallback)</summary>
+            <div class="form-group" style="margin-top: 8px;">
+              <input type="password" id="input-password" placeholder="••••••••••••">
+              <button type="button" id="btn-password" class="btn-secondary" style="margin-top: 8px;">Sign In with Password</button>
+            </div>
+          </details>
+
+          <p class="policy-footnote" id="txt-no-switch">
+            The authentication method is automatically selected based on current network conditions. User manual selection is disabled by cybersecurity policy.
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>
